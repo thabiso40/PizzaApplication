@@ -14,6 +14,10 @@ namespace PizzaApplication.Data
 
         }
         public DbSet<Employee> Employees { get; set; }
-
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<Customer> customers { get; set; }
+        public IEnumerable<Customer> Customers { get; internal set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<InventoryItem>InventoryItems{ get; set; }
     }
 }

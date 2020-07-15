@@ -11,22 +11,22 @@ using PizzaApplication.ViewModels;
 
 namespace PizzaApplication.Controllers
 {
-    public class EmployeeController : Controller
+    public class OrdersController : Controller
     {
         private readonly PizzaContext _context;
 
-        public EmployeeController(PizzaContext context)
+        public OrdersController(PizzaContext context)
         {
             _context = context;
         }
 
-        // GET: Employees
+        // GET: Orders
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Employees.ToListAsync());
+            return View(await _context.Orders.ToListAsync());
         }
 
-        // GET: Employees/Details/5
+        // GET: Orders/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,40 +34,49 @@ namespace PizzaApplication.Controllers
                 return NotFound();
             }
 
-            var employee = await _context.Employees
+            var order = await _context.Orders
                 .FirstOrDefaultAsync(m => m.ID == id);
-            if (employee == null)
+            if (order == null)
             {
                 return NotFound();
             }
 
-            return View(employee);
+            return View(order);
         }
 
-        // GET: Employees/Create
+        // GET: Orders/Create
         public IActionResult Create()
         {
-           
-            return View();
+            OrderAddViewModel vm = new OrderAddViewModel();
+            List<SelectListItem> customerList = new List<SelectListItem>();
+            foreach(Customer customer in _context.customers)
+            {
+                SelectListItem sli = new SelectListItem();
+                sli.Text = customer.FirstName + " " + customer.LastName;
+                sli.Value = customer.ID.ToString();
+                customerList.Add(sli);
+            }
+            vm.CustomerList = customerList;
+            return View(vm);
         }
 
-        // POST: Employees/Create
+        // POST: Orders/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,FirstName,LastName,Role,PhoneNumber,salary")] Employee employee)
+        public async Task<IActionResult> Create([Bind("ID,OrderType")] Order order)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(employee);
+                _context.Add(order);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(employee);
+            return View(order);
         }
 
-        // GET: Employees/Edit/5
+        // GET: Orders/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -75,22 +84,22 @@ namespace PizzaApplication.Controllers
                 return NotFound();
             }
 
-            var employee = await _context.Employees.FindAsync(id);
-            if (employee == null)
+            var order = await _context.Orders.FindAsync(id);
+            if (order == null)
             {
                 return NotFound();
             }
-            return View(employee);
+            return View(order);
         }
 
-        // POST: Employees/Edit/5
+        // POST: Orders/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,FirstName,LastName,Role,PhoneNumber,salary")] Employee employee)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,OrderType,DriverOut,DriverIn")] Order order)
         {
-            if (id != employee.ID)
+            if (id != order.ID)
             {
                 return NotFound();
             }
@@ -99,12 +108,12 @@ namespace PizzaApplication.Controllers
             {
                 try
                 {
-                    _context.Update(employee);
+                    _context.Update(order);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EmployeeExists(employee.ID))
+                    if (!OrderExists(order.ID))
                     {
                         return NotFound();
                     }
@@ -115,10 +124,10 @@ namespace PizzaApplication.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(employee);
+            return View(order);
         }
 
-        // GET: Employees/Delete/5
+        // GET: Orders/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -126,30 +135,30 @@ namespace PizzaApplication.Controllers
                 return NotFound();
             }
 
-            var employee = await _context.Employees
+            var order = await _context.Orders
                 .FirstOrDefaultAsync(m => m.ID == id);
-            if (employee == null)
+            if (order == null)
             {
                 return NotFound();
             }
 
-            return View(employee);
+            return View(order);
         }
 
-        // POST: Employees/Delete/5
+        // POST: Orders/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var employee = await _context.Employees.FindAsync(id);
-            _context.Employees.Remove(employee);
+            var order = await _context.Orders.FindAsync(id);
+            _context.Orders.Remove(order);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool EmployeeExists(int id)
+        private bool OrderExists(int id)
         {
-            return _context.Employees.Any(e => e.ID == id);
+            return _context.Orders.Any(e => e.ID == id);
         }
     }
 }
