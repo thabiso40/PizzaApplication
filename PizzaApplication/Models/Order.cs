@@ -8,9 +8,9 @@ namespace PizzaApplication.Models
 {
     public enum OrderType
     {
-        CarryOut,
-        Delivery,
-        SitIn
+        CarryOut=1,
+        Delivery=2,
+        SitIn=3
     }
     public class Order
     {
@@ -24,7 +24,7 @@ namespace PizzaApplication.Models
         public DateTime? DriverOut { get; set; }
         public DateTime? DriverIn { get; set; }
         [Required]
-        IEnumerable<OrderItem> OrderItems { get; set; }
+       public IEnumerable<OrderItem> OrderItems { get; set; }
 
 
 

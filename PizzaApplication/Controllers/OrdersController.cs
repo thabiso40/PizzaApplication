@@ -23,6 +23,7 @@ namespace PizzaApplication.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
+            
             return View(await _context.Orders.ToListAsync());
         }
 
@@ -65,15 +66,19 @@ namespace PizzaApplication.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,OrderType")] Order order)
+        public async Task<IActionResult> Create([Bind("ID,CustomerID,OrderType")] OrderAddViewModel orderVM)
         {
             if (ModelState.IsValid)
             {
+                Order order = new Order();
+                order.Customer = _context.customers.FirstOrDefault(c => c.ID == orderVM.CustomerID);
+                order.OrderType = orderVM.OrderType;
+                order.OrderItems = new List<OrderItem>();
                 _context.Add(order);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(order);
+            return View(orderVM);
         }
 
         // GET: Orders/Edit/5
@@ -159,6 +164,10 @@ namespace PizzaApplication.Controllers
         private bool OrderExists(int id)
         {
             return _context.Orders.Any(e => e.ID == id);
+        }
+        public async Task<IActionResult> AddItem()
+        {
+            return RedirectToAction("Create","OrderItems");
         }
     }
 }

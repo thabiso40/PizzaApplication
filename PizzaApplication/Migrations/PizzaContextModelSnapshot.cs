@@ -90,13 +90,13 @@ namespace PizzaApplication.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CustomerID");
+                    b.Property<int>("CustomerID");
 
                     b.Property<int?>("DriverID");
 
-                    b.Property<DateTime>("DriverIn");
+                    b.Property<DateTime?>("DriverIn");
 
-                    b.Property<DateTime>("DriverOut");
+                    b.Property<DateTime?>("DriverOut");
 
                     b.Property<int>("OrderType");
 
@@ -132,7 +132,8 @@ namespace PizzaApplication.Migrations
                 {
                     b.HasOne("PizzaApplication.Models.Customer", "Customer")
                         .WithMany()
-                        .HasForeignKey("CustomerID");
+                        .HasForeignKey("CustomerID")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("PizzaApplication.Models.Employee", "Driver")
                         .WithMany()

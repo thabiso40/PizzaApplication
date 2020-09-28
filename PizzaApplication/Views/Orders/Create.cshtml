@@ -19,14 +19,19 @@
 
             <div class="form-group">
                 <label asp-for="CustomerID" class="control-label"></label>
-                @Html.DropDownList("Customers",Model.CustomerList, "Select Customer", new { @class = "form-control" })
+                @Html.DropDownList("CustomerID",Model.CustomerList,"Select Customer", new { @class = "form-control" })
                 <span asp-validation-for="OrderType" class="text-danger"></span>
             </div>
 
 
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" formaction="AddItem" value="Add Item" class="btn btn-info" />
             </div>
+
+            <div class="form-group">
+                <input type="submit" formaction="Create" value="Create" class="btn btn-primary" />
+            </div>
+
         </form>
     </div>
 </div>

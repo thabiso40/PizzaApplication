@@ -7,11 +7,12 @@ namespace PizzaApplication.Models
 {
     public enum InventoryItemType
     {
-        size,
-        flavor,
-        Topping,
-        Source,
-        cheese
+        size=1,
+        flavor=2,
+        Topping=3,
+        Source=4,
+        cheese=5,
+        Base=6
     }
     public class InventoryItem
     {

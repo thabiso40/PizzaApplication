@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PizzaApplication.Data;
 using PizzaApplication.Models;
+using PizzaApplication.ViewModels;
 
 namespace PizzaApplication.Controllers
 {
@@ -23,6 +24,7 @@ namespace PizzaApplication.Controllers
         public async Task<IActionResult> Index()
         {
             return View(await _context.OrderItems.ToListAsync());
+         
         }
 
         // GET: OrderItems/Details/5
@@ -45,7 +47,9 @@ namespace PizzaApplication.Controllers
 
         // GET: OrderItems/Create
         public IActionResult Create()
+
         {
+          
             return View();
         }
 
@@ -65,6 +69,34 @@ namespace PizzaApplication.Controllers
             return View(orderItem);
         }
 
+
+        // POST: OrderItems/GetInventoryItems
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> GetInventoryItems( OrderItemAddViewModel orderItemVM)
+        {
+          List <InventoryItem> InventoryItems  =  _context.InventoryItems.Where(i => i.type == orderItemVM.InventoryItemType).ToList();
+            var InventoryItemsList = new List<SelectListItem>();
+            foreach(InventoryItem item in InventoryItems)
+            {
+                SelectListItem sli = new SelectListItem();
+                sli.Text = item.Name;
+                sli.Value = item.ID.ToString();
+                InventoryItemsList.Add(sli);
+            }
+            orderItemVM.InventoryList = InventoryItemsList;
+            return View("Create", orderItemVM);
+        }
+        //AddInventoryItemToOrderItem
+
+        public async Task<IActionResult> AddInventoryItemToOrderItem(OrderItemAddViewModel orderItemVM)
+        {
+            orderItemVM.OrderItemDetails.Add(_context.InventoryItems.FirstOrDefault(i => i.ID == orderItemVM.InventoryID));
+
+            return View("Create", orderItemVM);
+        }
         // GET: OrderItems/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {

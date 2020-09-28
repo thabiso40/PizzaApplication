@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace PizzaApplication.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class AddInventoryItem : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -45,16 +45,19 @@ namespace PizzaApplication.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrderItemDetails",
+                name: "InventoryItems",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    type = table.Column<int>(nullable: false)
+                    Name = table.Column<string>(nullable: true),
+                    type = table.Column<int>(nullable: false),
+                    QuantityRemaining = table.Column<int>(nullable: false),
+                    PricePerUnit = table.Column<decimal>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderItemDetails", x => x.ID);
+                    table.PrimaryKey("PK_InventoryItems", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -77,12 +80,12 @@ namespace PizzaApplication.Migrations
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CustomerID = table.Column<int>(nullable: true),
+                    CustomerID = table.Column<int>(nullable: false),
                     OrderType = table.Column<int>(nullable: false),
                     DriverID = table.Column<int>(nullable: true),
                     WaiterID = table.Column<int>(nullable: true),
-                    DriverOut = table.Column<DateTime>(nullable: false),
-                    DriverIn = table.Column<DateTime>(nullable: false)
+                    DriverOut = table.Column<DateTime>(nullable: true),
+                    DriverIn = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -92,7 +95,7 @@ namespace PizzaApplication.Migrations
                         column: x => x.CustomerID,
                         principalTable: "customers",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Orders_Employees_DriverID",
                         column: x => x.DriverID,
@@ -126,7 +129,7 @@ namespace PizzaApplication.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "OrderItemDetails");
+                name: "InventoryItems");
 
             migrationBuilder.DropTable(
                 name: "OrderItems");
