@@ -14,13 +14,14 @@
             <div class="form-group">
                 <label asp-for="OrderType" class="control-label"></label>
                 @Html.DropDownList("OrderType", Html.GetEnumSelectList(typeof(OrderType)), "Select Type", new { @class = "form-control" })
-                <span asp-validation-for="OrderType" class="text-danger"></span>
+                @*<span asp-validation-for="OrderType" class="text-danger"></span>*@
             </div>
 
             <div class="form-group">
+
                 <label asp-for="CustomerID" class="control-label"></label>
                 @Html.DropDownList("CustomerID",Model.CustomerList,"Select Customer", new { @class = "form-control" })
-                <span asp-validation-for="OrderType" class="text-danger"></span>
+                <span asp-validation-for="CustomerID" class="text-danger"></span>
             </div>
 
 

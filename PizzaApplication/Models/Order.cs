@@ -15,7 +15,7 @@ namespace PizzaApplication.Models
     public class Order
     {
         public int ID { get; set; }
-       [Required]
+       //[Required]
         public Customer Customer { get; set; }
         [Required]
         public OrderType OrderType { get; set; }
